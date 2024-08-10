@@ -27,7 +27,7 @@ Now, the table we have has references to files that were vacuumed which means th
 
 ## How will the data be affected?
 
-There are two options (based on the `spark.databricks.delta.fsck.missingDVsResolution` config) for what might happen when missing deletion vectors are found:
+There are two options (based on the `spark.databricks.delta.fsck.missingDeletionVectorsMode` config) for what might happen when missing deletion vectors are found:
 - By default, the command throws an exception when a missing deletion vector is found. In this case, no changes get committed so the table is unchanged. 
 - The second option is the deletion vector is deleted from the delta log and the accosiated parquet file is unchanged. In this scenario, we might see the deleted entries come back, or we might see duplicate entries (if an entry was updated).
 
@@ -53,7 +53,7 @@ FSCK REPAIR TABLE <table|delta.fileOrFolderPath> [DRY RUN]
 
 ## Configs
 `spark.databricks.delta.fsck.maxNumEntriesInResult` - used to set the limit for how many 
-`spark.databricks.delta.fsck.missingDVsResolution` - can be set to "exception" (default) or "removeDVs". By default, an exception is thrown when a deletion vector is detected. If the "removeDVs" option is selected, the transaction log entries that have a missing deletion vector are removed and then added back but with no accosiated deletion vector. That way we are preserving the associated parquet file but extra data might return due to a removed deletion vector. 
+`spark.databricks.delta.fsck.missingDeletionVectorsMode` - can be set to "exception" (default) or "removeDVs". By default, an exception is thrown when a deletion vector is detected. If the "removeDVs" option is selected, the transaction log entries that have a missing deletion vector are removed and then added back but with no accosiated deletion vector. That way we are preserving the associated parquet file but extra data might return due to a removed deletion vector. 
 
 ## Returns
 In both cases (`DRY RUN` and normal), the following columns will be reported to the user:
